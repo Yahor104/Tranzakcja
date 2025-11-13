@@ -1,4 +1,3 @@
--- 1. Tworzenie tabeli ubezpieczenia
 CREATE TABLE IF NOT EXISTS ubezpieczenia (
     ID_ubezpieczenia INT PRIMARY KEY AUTO_INCREMENT,
     ID_klienta INT,
@@ -8,7 +7,6 @@ CREATE TABLE IF NOT EXISTS ubezpieczenia (
     FOREIGN KEY (ID_samochodu) REFERENCES cars(id)
 );
 
--- 2. Wstawienie 1000 polis z ceną bazową zależną od roku auta
 INSERT INTO ubezpieczenia (ID_klienta, ID_samochodu, cena_bazowa_zł)
 SELECT 
     c.id AS ID_klienta,
@@ -17,14 +15,13 @@ SELECT
         WHEN CAST(TRIM(cr.rok) AS UNSIGNED) BETWEEN 1940 AND 1979 THEN 1300
         WHEN CAST(TRIM(cr.rok) AS UNSIGNED) BETWEEN 1980 AND 1999 THEN 2200
         WHEN CAST(TRIM(cr.rok) AS UNSIGNED) BETWEEN 2000 AND 2015 THEN 2500
-        ELSE 1500  -- minimalna cena bazowa, jeśli rok jest pusty lub poza zakresem
+        ELSE 1500  
     END AS cena_bazowa_zł
 FROM clients c
 JOIN cars cr ON cr.client_id = c.id
 ORDER BY RAND()
 LIMIT 1000;
 
--- 3. SELECT z wyliczeniem ceny po rabatach
 SELECT 
     u.ID_ubezpieczenia,
     c.first_name,
